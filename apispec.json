@@ -1,0 +1,93 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "ClubGPT Command Proxy API",
+    "description": "A simple API to execute commands on your server / local computer"
+  },
+  "servers": [
+    {
+      "url": "https://d168.asuscomm.com",
+      "description": "Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    },
+    "schemas": {
+      "CommandRequest": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "The command to execute, could be Powershell or bash according to the server platform."
+          },
+          "serverAddress": {
+            "type": "string",
+            "description": "Optional server URL, IPv4, or IPv6 address where the command should be executed.",
+            "pattern": "^(https?://[^\\s/$.?#].[^\\s]*|\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b|\\b(?:[A-Fa-f0-9]{1,4}:){7}[A-Fa-f0-9]{1,4}\\b)$",
+            "nullable": true
+          }
+        },
+        "required": ["command"]
+      },
+      "CommandResponse": {
+        "type": "object",
+        "properties": {
+          "stdout": {
+            "type": "string"
+          },
+          "stderr": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/execute": {
+      "post": {
+        "summary": "Execute a command",
+        "description": "Execute a command on the server",
+        "operationId": "executeCommand",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Command output",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommandResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Command not allowed or Potentially dangerous command"
+          }
+        }
+      }
+    }
+  }
+}
