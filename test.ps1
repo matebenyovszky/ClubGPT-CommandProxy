@@ -1,7 +1,7 @@
 $response = 0
 
 # API URL
-$url = 'https://command-proxy.azurewebsites.net/execute'
+$url = 'https://commandproxy.azurewebsites.net/execute'
 $url = 'https://d168.asuscomm.com/execute'
 
 # API Key

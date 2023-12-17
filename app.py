@@ -61,18 +61,24 @@ def create_app():
         data = request.json
         if data is None:
             return jsonify({'error': 'No data provided'}), 400
-        
-        server_address = data.get('serverAddress')
-        if server_address:
-            # Forward the request to the specified server address
-            response = requests.post(f'{server_address}/execute', json=data, headers={'Authorization': api_key})
-            return jsonify(response.json()), response.status_code
 
         command = data.get('command')
         if command is None:
             return jsonify({'error': 'No command provided'}), 400
 
-        # Basic security measures
+        server_address = data.get('serverAddress', None)
+        server_api_key = data.get('serverAPIkey', None)
+        if server_address and server_api_key:
+            try:
+                # Forward the request to the specified server address
+                response = requests.post(f'{server_address}/execute', json={'command': command}, headers={'Authorization': server_api_key})
+                response.raise_for_status()
+                return jsonify(response.json()), response.status_code
+            except requests.exceptions.RequestException as e:
+                return jsonify({'error': str(e)}), 500
+
+
+        # Basic security measures - if bridge???
         #allowed_commands = ['ls', 'echo', 'cat']
         #if not any(cmd in command for cmd in allowed_commands):
         #    return jsonify({'error': 'Command not allowed'}), 403

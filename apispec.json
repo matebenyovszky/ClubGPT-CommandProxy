@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://d168.asuscomm.com",
+      "url": "https://commandproxy.azurewebsites.net/",
       "description": "Server"
     }
   ],
@@ -31,6 +31,11 @@
             "type": "string",
             "description": "Optional server URL, IPv4, or IPv6 address where the command should be executed.",
             "pattern": "^(https?://[^\\s/$.?#].[^\\s]*|\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b|\\b(?:[A-Fa-f0-9]{1,4}:){7}[A-Fa-f0-9]{1,4}\\b)$",
+            "nullable": true
+          },
+          "serverAPIkey": {
+            "type": "string",
+            "description": "Optional API key for the server where the command should be executed.",
             "nullable": true
           }
         },
