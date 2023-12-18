@@ -71,7 +71,7 @@ def create_app():
         if server_address and server_api_key:
             try:
                 # Forward the request to the specified server address
-                response = requests.post(f'{server_address}/execute', json={'command': command}, headers={'Authorization': server_api_key})
+                response = requests.post(f'{server_address}/execute', json={'command': command}, headers={'Authorization': server_api_key}, verify=False)
                 response.raise_for_status()
 
                 stdout = response.content
