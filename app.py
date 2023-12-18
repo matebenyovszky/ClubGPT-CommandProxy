@@ -73,7 +73,12 @@ def create_app():
                 # Forward the request to the specified server address
                 response = requests.post(f'{server_address}/execute', json={'command': command}, headers={'Authorization': server_api_key})
                 response.raise_for_status()
+
+                stdout = response.content
+                return stdout
+                return jsonify(response.json()['content'])
                 return jsonify(response.json()), response.status_code
+            
             except requests.exceptions.RequestException as e:
                 return jsonify({'error': str(e)}), 500
 
