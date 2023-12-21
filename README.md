@@ -1,18 +1,34 @@
 ****** WORK IN PROGRESS ******
 
 # ClubGPT - CommandProxy
-Flask Command Executor OpenAPI 3.1 compatible service to use as a GPT action
+OpenAPI 3.1 compatible service which enables ChatGPT GPTs to run shell commands as an action on any computer (powershell, bash).
+
+Use at you own risk. Be careful, this is basically opening up a 
+
+## Introduction
+
+Using this tool and having ChatGPT Plus you can run any shell commands on your computer as an action.
+
+There are of course other approaches using local language models or LLM APIs, running them locally (like [Open Interpreter](https://github.com/KillianLucas/open-interpreter) or [PowerShellAI](https://github.com/dfinke/PowerShellAI)) or on a remote sandbox (like [ClubGPT-Sandbox](https://github.com/matebenyovszky/ClubGPT-Sandbox)), which are all also cool, but I wanted to try how far can I go with this approach.
 
 This is a Flask API that allows executing commands on the server. It uses an API key for authorization.
 
 ## Setup
 
 1. Install the required Python packages:
-bash
-pip install flask flasgger
+pip install -r requirements.txt
 
-2. Run the application:
-bash
+2. Configuration
+CP_MODE options:
+* SERVER: a worker (executor) that can run commands, could also act as a bridge
+* BRIDGE: cannot execute commands in the environment, just forward them. This is the default.
+
+KEY_MODE options
+* DEFAULT: Default key. This is the default.
+* ENV_KEY: API key defined in the .env file.
+* SESSION_KEY: Random key every time you. This is the default.
+
+3. Run the application:
 python app.py
 
 ## Usage

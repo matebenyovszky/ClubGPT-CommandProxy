@@ -1,32 +1,54 @@
-#from flask import Flask, request, jsonify
 from flask import Flask, render_template, request, jsonify, send_from_directory
-#from flask_swagger_ui import get_swaggerui_blueprint
 import subprocess
 import shlex
 import os
 import json
 import requests
 
-#load_dotenv()  # Load environment variables from .env file
+def get_command_interpreter():
+    if os.name == 'nt':  # Windows
+        try:
+            # Check if PowerShell is available
+            version = subprocess.check_output(["powershell", "$PSVersionTable.PSVersion.Major"], universal_newlines=True).strip()
+            return "powershell", version
+        except Exception:
+            version = subprocess.check_output(["cmd", "/c", "ver"], universal_newlines=True).strip()
+            return "cmd", version  # Default to cmd if PowerShell is not available
+    else:  # Unix/Linux/Mac
+        try:
+            # Check if bash is available
+            version = subprocess.check_output(["/bin/bash", "-c", "echo $BASH_VERSION"], universal_newlines=True).strip()
+            return "/bin/bash", version
+        except Exception:
+            version = subprocess.check_output(["/bin/sh", "-c", "echo $SH_VERSION"], universal_newlines=True).strip()
+            return "/bin/sh", version  # Default to sh if bash is not available
 
-#SWAGGER_URL = '/apidocs'  # URL for exposing Swagger UI (without trailing '/')
-#API_URL = '/apispec.json'  # Our API url (can of course be a local resource)
-
-# Call factory function to create our blueprint
-""" swaggerui_blueprint = get_swaggerui_blueprint(
-    SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
-    API_URL,
-    config={  # Swagger UI config overrides
-        'app_name': "Command Execution API"
-    },
-) """
+def check_python():
+    try:
+        # Check if Python is available and get its version
+        version = subprocess.check_output(["python", "--version"], universal_newlines=True).strip()
+        return "python", version
+    except Exception:
+        return None, None
 
 def create_app():
     app = Flask(__name__)
     #app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
+    # CP_MODE options (see .env.example)
+    CP_MODE = os.environ.get('CP_MODE', 'BRIDGE')  # Set your CP_MODE in the environment
+
+    # KEY_MODE options (see .env.example)
+    KEY_MODE = os.environ.get('KEY_MODE', 'SESSION_KEY')  # Set your KEY_MODE in the environment
+   
     # API key for security
-    API_KEY = os.environ.get('API_KEY', 'default_key')  # Set your API key in the environment
+    # If KEY_MODE is SESSION_KEY or no API_KEY is available, generate a random 16-character string using secrets
+    if KEY_MODE == 'SESSION_KEY' or not os.environ.get('API_KEY'):
+        import secrets
+        API_KEY = secrets.token_hex(16)
+        print(f"API_KEY: {API_KEY}")
+    else:
+        API_KEY = os.environ.get('API_KEY')
 
     @app.route('/apispec.json')
     def spec():
@@ -42,6 +64,45 @@ def create_app():
     def docs():
         return render_template('docs.html')
 
+    @app.route('/info')
+    def info():
+        return "For more info visit https://clubgpt.info"
+
+    @app.route('/system_info', methods=['POST'])
+    def system_info():
+
+        data = request.json
+        if data is None:
+            return jsonify({'error': 'No data provided'}), 400
+
+        server_address = data.get('serverAddress', None)
+        server_api_key = data.get('serverAPIkey', None)
+        if server_address and server_api_key:
+            try:
+                # Forward the request to the specified server address
+                response = requests.get(f"{server_address}/system_info", headers={"Authorization": server_api_key}, verify=False)
+
+                response.raise_for_status()
+
+                stdout = response.content
+                return stdout
+                return jsonify(response.json()['content'])
+                return jsonify(response.json()), response.status_code
+            
+            except requests.exceptions.RequestException as e:
+                return jsonify({'error': str(e)}), 500
+        
+        interpreter, interpreter_version = get_command_interpreter()
+        python, python_version = check_python()
+
+        if python:
+            python_info = f"Python version: {python_version}"
+        else:
+            python_info = "Python is not available"
+
+        return f"Interpreter: {interpreter}, Version: {interpreter_version}, {python_info}"
+
+
     @app.route('/execute', methods=['POST'])
     def execute_command():
 
@@ -56,11 +117,11 @@ def create_app():
             return jsonify({'error': 'No Authorization header provided'}), 400
         
         if api_key != API_KEY:
-            return jsonify({'error': 'Unauthorized'}), 401
+            return jsonify({'error': 'Unauthorized, API key is not matching'}), 401
         
         data = request.json
         if data is None:
-            return jsonify({'error': 'No data provided'}), 400
+            return jsonify({'error': 'No data provided in request'}), 400
 
         command = data.get('command')
         if command is None:
@@ -82,23 +143,36 @@ def create_app():
             except requests.exceptions.RequestException as e:
                 return jsonify({'error': str(e)}), 500
 
-
-        # Basic security measures - if bridge???
-        #allowed_commands = ['ls', 'echo', 'cat']
-        #if not any(cmd in command for cmd in allowed_commands):
-        #    return jsonify({'error': 'Command not allowed'}), 403
+        # Basic security measures in BRIDGE mode
+        allowed_commands = ['curl', 'echo']
+        if os.environ.get('CP_MODE') != 'SERVER':
+            if not any(cmd in command for cmd in allowed_commands):
+                return jsonify({'error': 'Command not allowed in BRIDGE mode'}), 403
 
         # Avoid potentially dangerous commands
-        if any(cmd in command for cmd in ['rm', 'mv', 'cp']):
-            return jsonify({'error': 'Potentially dangerous command'}), 403
+        #if any(cmd in command for cmd in ['rm', 'mv', 'cp']):
+        #    return jsonify({'error': 'Potentially dangerous command'}), 403
 
         try:
             # Check the operating system
-            if os.name == 'nt':
+            interpreter, _ = data.get('interpreter', get_command_interpreter())
+            if interpreter == 'powershell':
                 # On Windows, call PowerShell and pass the command as an argument
                 process = subprocess.Popen(["powershell", "-Command"] + shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            elif interpreter == 'cmd':
+                # On Windows, call cmd and pass the command as an argument
+                process = subprocess.Popen(["cmd", "/c"] + shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            elif interpreter == '/bin/bash':
+                # On Linux, call bash and pass the command as an argument
+                process = subprocess.Popen(["/bin/bash", "-c"] + shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            elif interpreter == '/bin/sh':
+                # On Linux, call sh and pass the command as an argument
+                process = subprocess.Popen(["/bin/sh", "-c"] + shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            elif interpreter == 'python':
+                # Call Python and pass the command as an argument
+                process = subprocess.Popen(["python", "-c"] + shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             else:
-                # On Linux, just split the command
+                # Default to shlex.split(command)
                 process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
             stdout, stderr = process.communicate()

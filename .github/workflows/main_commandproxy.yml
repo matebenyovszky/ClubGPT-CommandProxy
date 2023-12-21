@@ -15,10 +15,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
       - name: Set up Python version
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: '3.12'
 
@@ -37,7 +38,17 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
-        
+
+      - name: Use API Key
+        run: |
+          echo "API_KEY=${{ secrets.API_KEY }}" > .env
+          echo "CP_MODE=${{ env.CP_MODE }}" >> .env
+          echo "KEY_MODE=${{ env.KEY_MODE }}" >> .env
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          CP_MODE: ${{ env.CP_MODE }}
+          KEY_MODE: ${{ env.KEY_MODE }}
+
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment

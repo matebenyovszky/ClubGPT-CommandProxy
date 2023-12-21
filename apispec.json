@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "title": "ClubGPT Command Proxy API",
     "description": "A simple API to execute commands on your server / local computer"
   },
@@ -25,7 +25,13 @@
         "properties": {
           "command": {
             "type": "string",
-            "description": "The command to execute, could be Powershell or bash according to the server platform."
+            "description": "The command to execute, could be Powershell or bash according to the server platform.",
+            "nullable": true
+          },
+          "interpreter": {
+            "type": "string",
+            "description": "Optional interpreter to use for executing the command. Could be 'powershell', 'cmd', '/bin/bash', '/bin/sh', or 'python'.",
+            "nullable": true
           },
           "serverAddress": {
             "type": "string",
@@ -39,7 +45,7 @@
             "nullable": true
           }
         },
-        "required": ["command"]
+        "required": []
       },
       "CommandResponse": {
         "type": "object",
@@ -72,11 +78,37 @@
                 "$ref": "#/components/schemas/CommandRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
             "description": "Command output",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommandResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Command not allowed or Potentially dangerous command"
+          }
+        }
+      }
+    },
+    "/system_info": {
+      "get": {
+        "summary": "Get system information",
+        "description": "Retrieve system information from the server",
+        "operationId": "getSystemInfo",
+        "responses": {
+          "200": {
+            "description": "System informationchecking available interpreters",
             "content": {
               "application/json": {
                 "schema": {
