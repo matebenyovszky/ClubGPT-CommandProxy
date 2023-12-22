@@ -51,6 +51,7 @@ def create_app():
         print(f"API_KEY: {API_KEY}")
     else:
         API_KEY = os.environ.get('API_KEY')
+        print(f"API_KEY: {API_KEY}")
 
     @app.route('/apispec.json')
     def spec():
