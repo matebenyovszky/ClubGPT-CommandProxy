@@ -37,9 +37,11 @@ def create_app():
 
     # CP_MODE options (see .env.example)
     CP_MODE = os.environ.get('CP_MODE', 'BRIDGE')  # Set your CP_MODE in the environment
+    print(CP_MODE)
 
     # KEY_MODE options (see .env.example)
     KEY_MODE = os.environ.get('KEY_MODE', 'SESSION_KEY')  # Set your KEY_MODE in the environment
+    print(KEY_MODE)
    
     # API key for security
     # If KEY_MODE is SESSION_KEY or no API_KEY is available, generate a random 16-character string using secrets
@@ -144,10 +146,10 @@ def create_app():
                 return jsonify({'error': str(e)}), 500
 
         # Basic security measures in BRIDGE mode
-        allowed_commands = ['curl', 'echo']
         if os.environ.get('CP_MODE') != 'SERVER':
+            allowed_commands = ['curl', 'echo']
             if not any(cmd in command for cmd in allowed_commands):
-                return jsonify({'error': 'Command not allowed in BRIDGE mode'}), 403
+                return jsonify({'error': '♣️ Command not allowed in BRIDGE mode'}), 403
 
         # Avoid potentially dangerous commands
         #if any(cmd in command for cmd in ['rm', 'mv', 'cp']):
