@@ -120,7 +120,7 @@ def create_app():
             return jsonify({'error': 'No Authorization header provided'}), 400
         
         if api_key != API_KEY:
-            return jsonify({'error': 'Unauthorized, API key is not matching'}), 401
+            return jsonify({'error': 'Unauthorized, API key is not matching', 'provided_key': api_key, 'expected_key': API_KEY}), 401
         
         data = request.json
         if data is None:
