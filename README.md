@@ -24,7 +24,6 @@ CP_MODE options:
 * BRIDGE: cannot execute commands in the environment, just forward them. This is the default.
 
 KEY_MODE options
-* DEFAULT: Default key. This is the default.
 * ENV_KEY: API key defined in the .env file.
 * SESSION_KEY: Random key every time you. This is the default.
 
