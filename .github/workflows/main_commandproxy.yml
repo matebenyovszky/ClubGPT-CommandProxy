@@ -23,11 +23,21 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Set API Key3
+        run: echo "API_KEY=${{ secrets.API_KEY }}" > .env
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+
       - name: Create and start virtual environment
         run: |
           python -m venv venv
           source venv/bin/activate
-      
+
+      - name: Set API Key2
+        run: echo "API_KEY=${{ secrets.API_KEY }}" > .env
+        env:
+          API_KEY: ${{ secrets.API_KEY }}          
+
       - name: Cache pip dependencies
         uses: actions/cache@v3
         with:
@@ -39,12 +49,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Use API Key
-        run: |
-          echo "API_KEY=${{ secrets.API_KEY }}" > .env
+      - name: Set API Key
+        run: echo "API_KEY=${{ secrets.API_KEY }}" > .env
         env:
           API_KEY: ${{ secrets.API_KEY }}
-
 
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 

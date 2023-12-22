@@ -103,7 +103,16 @@ def create_app():
         else:
             python_info = "Python is not available"
 
-        return f"Interpreter: {interpreter}, Version: {interpreter_version}, {python_info}"
+        CP_MODE = os.environ.get('CP_MODE', 'BRIDGE')
+        KEY_MODE = os.environ.get('KEY_MODE', 'SESSION_KEY')
+
+        return jsonify({
+            "Interpreter": interpreter,
+            "Interpreter Version": interpreter_version,
+            "Python Info": python_info,
+            "CP_MODE": CP_MODE,
+            "KEY_MODE": KEY_MODE
+        })
 
 
     @app.route('/execute', methods=['POST'])
