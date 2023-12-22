@@ -1,7 +1,7 @@
 ✅ Forward API key to remote machine
-◻️ If API key is empty, only allow remote run
-◻️ Print out key and ipaddress locally
-◻️ Check machine type, so know what kind of commands could be run
+✅ If API key is empty, only allow remote run
+✅ Print out key and ipaddress locally
+✅ Check machine type, so know what kind of commands could be run
 ◻️ General GPT, hide innecessary information
 ◻️ Encoding - decoding for special characters? (see "Hello World!" folder creation - URL encode?/hash)
 ◻️ Open file from remote machine

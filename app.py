@@ -82,7 +82,7 @@ def create_app():
         if server_address and server_api_key:
             try:
                 # Forward the request to the specified server address
-                response = requests.post(f"{server_address}/system_info", headers={"Authorization": server_api_key}, verify=False)
+                response = requests.post(f"{server_address}/system_info", json={}, headers={"Authorization": server_api_key}, verify=False)
 
                 response.raise_for_status()
 
