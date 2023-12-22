@@ -43,8 +43,7 @@ jobs:
 
       - name: Debug variables
         run: |
-          echo "CP_MODE=${{env.CP_MODE}}"
-          echo "KEY_MODE=${{env.KEY_MODE}}"
+          echo "API_KEY=${{ secrets.API_KEY }}" > .env
 
       - name: Use API Key
         run: |
