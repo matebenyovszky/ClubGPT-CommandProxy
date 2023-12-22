@@ -41,6 +41,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - run: env
+      
       - name: Use API Key
         run: |
           echo "API_KEY=${{ secrets.API_KEY }}" > .env
