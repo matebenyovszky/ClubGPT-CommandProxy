@@ -37,7 +37,7 @@ def check_python():
 def create_app():
     app = Flask(__name__)
     #app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
-    print(f"♣️ ClubGPT ♣️ - CommandProxy")
+    print("♣️ ClubGPT ♣️ - CommandProxy")
 
     # CP_MODE options (see .env.example)
     CP_MODE = os.environ.get('CP_MODE', 'BRIDGE')  # Set your CP_MODE in the environment
