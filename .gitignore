@@ -1,4 +1,4 @@
-#.env
+.env
 .idea
 IDEAS.md
 .vscode
@@ -129,7 +129,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-#.env
+.env
 .venv
 env/
 venv/
