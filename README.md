@@ -36,7 +36,32 @@ There are of course other approaches using local language models or LLM APIs, ru
 
 ## Fetures and highlights
 
-This is a Flask API that allows executing commands on the server. It uses an API key for authorization.
+- This is a Flask API that allows executing commands on a machine (PowerShell/CMD/Shell/Bash/Python etc.).
+- It uses an API key for authorization (fixed or generated for every session - so you don't expose your machine to ChatGPT on a long term)
+- Separate endpoint to get basic data about the system (/system_info)
+- Bridge mode to forward request to another worker. Bridge mode was required because I cannot make it work directly with ChatGPT, so I made az Azure Web App to forward commands.
+
+## Samples and ideas
+
+- File and Folder Management:
+  - Create a folder in one location, then move files to it from another location.
+  - Find and copy or delete multiple files from the machine based on various filter criteria (e.g. extension, creation date).
+- Collect system information:
+  - Query system hardware and software configuration, such as processor, memory, operating system version.
+- Automated Administrator Tasks:
+  - Analyze system log files, look for error messages or specific events.
+  - Configure or update remote desktop settings.
+- Perform network operations:
+  - Display the IP address and network configuration of the machine.
+  - Run network diagnostic commands such as ping or traceroute.
+- Scripts and Automated Tasks:
+  - Write and run simple Python or PowerShell scripts, for example for data processing or system administration.
+- Security Audits:
+  - Checking and installing security updates.
+  - Run virus scans or check firewall settings.
+- Custom Tasks:
+  - Set automated reminders or alerts for special events.
+  - Install, update or uninstall various applications via command line.
 
 ## Setup
 
@@ -55,37 +80,84 @@ KEY_MODE options
 3. Run the application:
 python app.py
 
-## Usage
+4. Maker you machine accessible from the internet, accessible by ChatGPT.
+
+In my case I've set up a Dynamic DNS with Let's Encrypt certificates and port forwarding in my computer (published my computer's port 5000 on 443). Downloaded key.pem and cert.pem from the router into "certificates" directory so I could start my Flask application with those.
+
+5. Create a GPT
+
+You can use this [prompt](prompts.example.md) as an instruction, where if you optionally set the base data you can start quicker.
+
+6. Add GPT action
+
+Create new action, import URL from your server `https://%URL%/apispec.json`.
+Set Authentication to "API Key" with header name "Authorization".
+
+![Setup Action](images/setup_action_authentication.jpg)
+
+7. Have fun
+
+## Usage from API calls
 
 You can execute a command on the server by making a POST request to the `/execute` endpoint. Here's a sample `curl` command:
 
-bash
-curl -X POST -H "Content-Type: application/json" -H "Authorization: your_api_key" -d '{"command":"ls"}' %URL%/execute
-
-
+```bash
 curl -X POST "%URL%/execute" -H "Authorization: your_secret_api_key_here" -H "Content-Type: application/json" -d '{"command":"ls"}'
+```
 
-Replace `your_api_key` with your actual API key.
+```powershell
+# API URL
+$url = '%URL%/system_info'
+
+# API Key
+$headers = @{"Authorization" = "your_secret_api_key_here"}
+
+$body = @{
+    #"serverAddress" = "optional_remote_%URL%"
+    #"serverAPIkey" = "optional_remote_your_secret_api_key_here"
+
+} | ConvertTo-Json
+
+# Send GET Request
+$response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body -ContentType "application/json"
+
+# Display the Response
+$response
+#$response.stdout # If JSON
+```
+
+```powershell
+# API URL
+$url = '%URL%/execute'
+
+# API Key
+$headers = @{"Authorization" = "your_secret_api_key_here"}
+
+# Data Payload
+$body = @{
+    "command" = "echo Hello World!"
+    #"serverAddress" = "optional_remote_%URL%"
+    #"serverAPIkey" = "optional_remote_your_secret_api_key_here"
+
+} | ConvertTo-Json
+
+# [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+
+# Send POST Request
+$response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body -ContentType "application/json"
+
+# Display the Response
+$response
+#$response.stdout # If JSON
+```powershell
+
+Replace `your_secret_api_key_here` with your actual API key.
 
 ## Security
 
 This API uses an API key for authorization. The API key is set in the environment variable `API_KEY`. If `API_KEY` is not set, the application will generate one.
 
-## Notes:
-
-### Local / remote server / worker publishing
-
-On my home router:
-I use port forwarding rule to publish port 5000.
-
-Optional:
-* Dynamic DNS
-* Let's Encrypt
-* Download key.pem and cert.pem into "certificates" directory
-
-### Bridge mode
-
-Bridge mode was required because I cannot make it work directly with ChatGPT, so I made az Azure Web App to forward commands.
+But be aware, that this is only a POC, can be considered as a backdoor to your machine, not intended for production etc... so use at your own risk.
 
 ### Contributions
 

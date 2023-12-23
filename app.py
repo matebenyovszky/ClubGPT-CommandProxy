@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Function to get the command interpreter based on the operating system
 def get_command_interpreter():
     if os.name == 'nt':  # Windows
         try:
@@ -26,17 +27,17 @@ def get_command_interpreter():
             version = subprocess.check_output(["/bin/sh", "-c", "echo $SH_VERSION"], universal_newlines=True).strip()
             return "/bin/sh", version  # Default to sh if bash is not available
 
+# Function to check if Python is available and get its version
 def check_python():
     try:
-        # Check if Python is available and get its version
         version = subprocess.check_output(["python", "--version"], universal_newlines=True).strip()
         return "python", version
     except Exception:
         return None, None
 
+# Function to create the Flask app
 def create_app():
     app = Flask(__name__)
-    #app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
     print("♣️ ClubGPT ♣️ - CommandProxy")
 
     # CP_MODE options (see .env.example)
@@ -88,11 +89,10 @@ def create_app():
             try:
                 # Forward the request to the specified server address
                 response = requests.post(f"{server_address}/system_info", json={}, headers={"Authorization": server_api_key}, verify=False)
-
                 response.raise_for_status()
 
-                stdout = response.content
-                return stdout
+                #stdout = response.content
+                #return stdout
                 return jsonify(response.json()['content'])
                 return jsonify(response.json()), response.status_code
             
@@ -118,13 +118,12 @@ def create_app():
             "KEY_MODE": KEY_MODE
         })
 
-
+    # Route to execute a command
     @app.route('/execute', methods=['POST'])
     def execute_command():
 
         # Checking the API key
         print(request)
-        print(request.remote_addr)
         api_key = request.headers.get('Authorization')
         print(api_key)
         print(API_KEY)
@@ -195,13 +194,13 @@ def create_app():
 
             # Check if stderr is not empty
             if stderr:
-                return stderr.decode()
-                #return jsonify({'stdout': stdout.decode(), 'stderr': stderr.decode()})
+                #return stderr.decode()
+                return jsonify({'stdout': stdout.decode(), 'stderr': stderr.decode()})
             else:
-                return stdout.decode()
-                #return jsonify({'stdout': stdout.decode()})
+                #return stdout.decode()
+                return jsonify({'stdout': stdout.decode()})
         except Exception as e:
-            return str(e)
+            #return str(e)
             return jsonify({'error': str(e)})
 
     return app
@@ -210,7 +209,6 @@ app = create_app()
 
 # Run the app if this file is executed directly
 if __name__ == '__main__':
-
     if os.path.isfile('certificates/cert.pem') and os.path.isfile('certificates/key.pem'):
         import socket
         host = socket.gethostbyname(socket.gethostname())
