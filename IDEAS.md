@@ -3,6 +3,7 @@
 ✅ Print out key and ipaddress locally
 ✅ Check machine type, so know what kind of commands could be run
 ◻️ General GPT, hide innecessary information
+◻️ Use key-vault feature in azure
 ◻️ Encoding - decoding for special characters? (see "Hello World!" folder creation - URL encode?/hash)
 ◻️ Open file from remote machine
 ◻️ Screenshot sharing
