@@ -24,7 +24,7 @@ Use at you own risk.
 - [♣️ ClubGPT ♣️ - DreamTeam](https://github.com/matebenyovszky/ClubGPT) - amore general approach, where the AI selects team members and tools according to the task
 
 ## Workshop and tools for the agents (other repos)
-- ♣️ ClubGPT ♣️ - CommandProxy - run commands and code on a remote computer
+- ♣️ ClubGPT ♣️ - CommandProxy - (this repo) run commands and code on a remote computer
 - ♣️ ClubGPT ♣️ - Sandbox - run code in a sandbox
 - [♣️ ClubGPT ♣️ - Sandbox-ts](https://github.com/matebenyovszky/ClubGPT-Sandbox-ts) - run code in a sandbox (in Typescript, I possibly will continue to work on the Python version)
 
@@ -33,6 +33,8 @@ Use at you own risk.
 Using this tool and having ChatGPT Plus you can run any shell commands on your computer as an action.
 
 There are of course other approaches using local language models or LLM APIs, running them locally (like [Open Interpreter](https://github.com/KillianLucas/open-interpreter) or [PowerShellAI](https://github.com/dfinke/PowerShellAI)) or on a remote sandbox (like [ClubGPT-Sandbox](https://github.com/matebenyovszky/ClubGPT-Sandbox)), which are all also cool, but I wanted to try how far can I go with this approach.
+
+## Fetures and highlights
 
 This is a Flask API that allows executing commands on the server. It uses an API key for authorization.
 
@@ -67,21 +69,9 @@ Replace `your_api_key` with your actual API key.
 
 ## Security
 
-This API uses an API key for authorization. The API key is set in the environment variable `API_KEY`. If `API_KEY` is not set, the default key is `default_key`.
+This API uses an API key for authorization. The API key is set in the environment variable `API_KEY`. If `API_KEY` is not set, the application will generate one.
 
-The API also has some basic security measures to prevent potentially dangerous commands from being executed. For example, it does not allow commands that include `rm`, `mv`, or `cp`.
-
-Notes:
-
-
-### Local / remote server / worker app
-
-To use the PDF crawler, follow these steps:
-
-1. Install the required packages from `requirements.txt`.
-2. Collect underpants.
-3. Define the necessary environment variables.
-4. Run the `app.py` file to start.
+## Notes:
 
 ### Local / remote server / worker publishing
 
