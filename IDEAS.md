@@ -2,10 +2,11 @@
 ✅ If API key is empty, only allow remote run
 ✅ Print out key and ipaddress locally
 ✅ Check machine type, so know what kind of commands could be run
+✅ Use key-vault feature in GitHub
 ◻️ General GPT, hide innecessary information
-◻️ Use key-vault feature in azure
 ◻️ Encoding - decoding for special characters? (see "Hello World!" folder creation - URL encode?/hash)
 ◻️ Open file from remote machine
+◻️ Key on info function too
 ◻️ Screenshot sharing
 ◻️ Save file to remote machine
 ◻️ Search files / in files on remote machine

@@ -15,11 +15,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python version
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.12'
 
-      - name: Set API Key
+      - name: Set API Key and ENV parameters
         run: echo "API_KEY=${{ secrets.API_KEY }}" > .env
       - name: Set additional environment variables
         run: |

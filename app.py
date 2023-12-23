@@ -37,14 +37,15 @@ def check_python():
 def create_app():
     app = Flask(__name__)
     #app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
+    print(f"♣️ ClubGPT ♣️ - CommandProxy")
 
     # CP_MODE options (see .env.example)
     CP_MODE = os.environ.get('CP_MODE', 'BRIDGE')  # Set your CP_MODE in the environment
-    print(CP_MODE)
+    print(f"CP_MODE: {CP_MODE}")
 
     # KEY_MODE options (see .env.example)
     KEY_MODE = os.environ.get('KEY_MODE', 'SESSION_KEY')  # Set your KEY_MODE in the environment
-    print(KEY_MODE)
+    print(f"KEY_MODE: {KEY_MODE}")
    
     # API key for security
     # If KEY_MODE is SESSION_KEY or no API_KEY is available, generate a random 16-character string using secrets
@@ -160,7 +161,7 @@ def create_app():
 
         # Basic security measures in BRIDGE mode
         if os.environ.get('CP_MODE') != 'SERVER':
-            allowed_commands = ['curl', 'echo']
+            allowed_commands = ['curl', 'echo', 'ping']
             if not any(cmd in command for cmd in allowed_commands):
                 return jsonify({'error': '♣️ Command not allowed in BRIDGE mode'}), 403
 
