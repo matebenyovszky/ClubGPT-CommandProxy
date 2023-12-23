@@ -77,3 +77,4 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_912D904EA3BD4936B7B30D505BD05882 }}
           app-settings-json: '{"API_KEY":"${{ secrets.API_KEY }}"}'
+          app-settings: '{"API_KEY":"${{ secrets.API_KEY }}"}'
