@@ -4,9 +4,9 @@ import shlex
 import os
 import json
 import requests
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 
-#load_dotenv()
+load_dotenv()
 
 def get_command_interpreter():
     if os.name == 'nt':  # Windows
