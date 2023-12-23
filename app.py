@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
+from dotenv import load_dotenv
 import subprocess
 import shlex
 import os
 import json
 import requests
 
+load_dotenv()
 def get_command_interpreter():
     if os.name == 'nt':  # Windows
         try:
