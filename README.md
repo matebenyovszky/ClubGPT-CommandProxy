@@ -63,6 +63,10 @@ There are of course other approaches using local language models or LLM APIs, ru
   - Set automated reminders or alerts for special events.
   - Install, update or uninstall various applications via command line.
 
+Some sample pictures
+
+[View Sample Images Here](images/)
+
 ## Setup
 
 1. Install the required Python packages:
