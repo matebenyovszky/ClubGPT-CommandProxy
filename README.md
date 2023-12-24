@@ -69,13 +69,14 @@ There are of course other approaches using local language models or LLM APIs, ru
 pip install -r requirements.txt
 
 2. Configuration
-CP_MODE options:
-* SERVER: a worker (executor) that can run commands, could also act as a bridge
-* BRIDGE: cannot execute commands in the environment, just forward them. This is the default.
 
-KEY_MODE options
-* ENV_KEY: API key defined in the .env file.
-* SESSION_KEY: Random key every time you. This is the default.
+- CP_MODE options:
+ - SERVER: a worker (executor) that can run commands, could also act as a bridge
+ - BRIDGE: cannot execute commands in the environment, just forward them. This is the default.
+
+- KEY_MODE options
+ - ENV_KEY: API key defined in the .env file.
+ - SESSION_KEY: Random key every time you. This is the default.
 
 3. Run the application:
 python app.py
@@ -149,7 +150,7 @@ $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $bo
 # Display the Response
 $response
 #$response.stdout # If JSON
-```powershell
+```
 
 Replace `your_secret_api_key_here` with your actual API key.
 
