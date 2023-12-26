@@ -105,10 +105,13 @@ def create_app():
                 response = requests.post(f"{server_address}/system_info", json={}, headers={"Authorization": server_api_key}, verify=False)
                 response.raise_for_status()
 
-                #stdout = response.content
-                #return stdout
-                return jsonify(response.json()['content'])
+                # Return the JSON content and status code from the response
                 return jsonify(response.json()), response.status_code
+
+                #stdout = response.content
+                return response
+                return jsonify(response.json()['content'])
+                return jsonify(response.json()), response.status_code    
             
             except requests.exceptions.RequestException as e:
                 if VERBOSE == 'ON':
