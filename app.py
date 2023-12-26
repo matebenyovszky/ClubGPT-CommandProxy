@@ -7,6 +7,7 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
+VERBOSE = os.environ.get('VERBOSE', 'ON')  # Set your VERBOSE in the environment
 
 # Function to get the command interpreter based on the operating system
 def get_command_interpreter():
@@ -15,7 +16,9 @@ def get_command_interpreter():
             # Check if PowerShell is available
             version = subprocess.check_output(["powershell", "$PSVersionTable.PSVersion.Major"], universal_newlines=True).strip()
             return "powershell", version
-        except Exception:
+        except Exception as e:
+            if VERBOSE == 'ON':
+                print(f"Error: {str(e)}")
             version = subprocess.check_output(["cmd", "/c", "ver"], universal_newlines=True).strip()
             return "cmd", version  # Default to cmd if PowerShell is not available
     else:  # Unix/Linux/Mac
@@ -23,7 +26,9 @@ def get_command_interpreter():
             # Check if bash is available
             version = subprocess.check_output(["/bin/bash", "-c", "echo $BASH_VERSION"], universal_newlines=True).strip()
             return "/bin/bash", version
-        except Exception:
+        except Exception as e:
+            if VERBOSE == 'ON':
+                print(f"Error: {str(e)}")
             version = subprocess.check_output(["/bin/sh", "-c", "echo $SH_VERSION"], universal_newlines=True).strip()
             return "/bin/sh", version  # Default to sh if bash is not available
 
@@ -32,13 +37,22 @@ def check_python():
     try:
         version = subprocess.check_output(["python", "--version"], universal_newlines=True).strip()
         return "python", version
-    except Exception:
+    except Exception as e:
+        if VERBOSE == 'ON':
+            print(f"Error: {str(e)}")
         return None, None
 
 # Function to create the Flask app
 def create_app():
     app = Flask(__name__)
     print("♣️ ClubGPT ♣️ - CommandProxy")
+
+    # VERBOSE options (see .env.example)
+    VERBOSE = os.environ.get('VERBOSE', 'ON')  # Set your VERBOSE in the environment
+    if VERBOSE == 'ON':
+        print("VERBOSE: ON")
+    else:
+        print("VERBOSE: OFF")
 
     # CP_MODE options (see .env.example)
     CP_MODE = os.environ.get('CP_MODE', 'BRIDGE')  # Set your CP_MODE in the environment
@@ -97,6 +111,8 @@ def create_app():
                 return jsonify(response.json()), response.status_code
             
             except requests.exceptions.RequestException as e:
+                if VERBOSE == 'ON':
+                    print(f"Error: {str(e)}")
                 return jsonify({'error': str(e)}), 500
         
         interpreter, interpreter_version = get_command_interpreter()
@@ -122,25 +138,36 @@ def create_app():
     @app.route('/execute', methods=['POST'])
     def execute_command():
 
+        if VERBOSE == 'ON':
+            print(request)
+
         # Checking the API key
-        print(request)
         api_key = request.headers.get('Authorization')
-        print(api_key)
-        print(API_KEY)
         
         if api_key is None:
+            if VERBOSE == 'ON':
+                print('Error: No Authorization header provided')
             return jsonify({'error': 'No Authorization header provided'}), 400
         
         if api_key != API_KEY:
+            if VERBOSE == 'ON':
+                print(f'Error: Unauthorized, API key is not matching. Provided key: {api_key}, Expected key: {API_KEY}')
             return jsonify({'error': 'Unauthorized, API key is not matching', 'provided_key': api_key, 'expected_key': API_KEY}), 401
         
         data = request.json
         if data is None:
+            if VERBOSE == 'ON':
+                print('Error: No data provided in request')
             return jsonify({'error': 'No data provided in request'}), 400
 
         command = data.get('command')
         if command is None:
+            if VERBOSE == 'ON':
+                print('Error: No command provided')
             return jsonify({'error': 'No command provided'}), 400
+
+        if VERBOSE == 'ON':
+            print(f"Received command: {command}")
 
         server_address = data.get('serverAddress', None)
         server_api_key = data.get('serverAPIkey', None)
@@ -156,6 +183,8 @@ def create_app():
                 return jsonify(response.json()), response.status_code
             
             except requests.exceptions.RequestException as e:
+                if VERBOSE == 'ON':
+                    print(f"Error: {str(e)}")
                 return jsonify({'error': str(e)}), 500
 
         # Basic security measures in BRIDGE mode
@@ -201,7 +230,12 @@ def create_app():
                 return jsonify({'stdout': stdout.decode()})
         except Exception as e:
             #return str(e)
+            if VERBOSE == 'ON':
+                print(f"Error: {str(e)}")
             return jsonify({'error': str(e)})
+
+        if VERBOSE == 'ON':
+            print(f"Response: {jsonify({'stdout': stdout.decode(), 'stderr': stderr.decode() if stderr else ''})}")
 
     return app
 
