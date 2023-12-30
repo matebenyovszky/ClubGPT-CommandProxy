@@ -1,12 +1,8 @@
 # CC BY-NC-SA 4.0 LEGAL CODE
-## Attribution-NonCommercial-ShareAlike 4.0 International
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+Public License
 
 Canonical URL  https://creativecommons.org/licenses/by-nc-sa/4.0/
-
-Attribution-NonCommercial-ShareAlike 4.0 International
-
-# Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
-Public License
 
 By exercising the Licensed Rights (defined below), You accept and agree
 to be bound by the terms and conditions of this Creative Commons
@@ -17,7 +13,6 @@ consideration of Your acceptance of these terms and conditions, and the
 Licensor grants You such rights in consideration of benefits the
 Licensor receives from making the Licensed Material available under
 these terms and conditions.
-
 
 ## Section 1 -- Definitions.
 

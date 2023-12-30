@@ -1,34 +1,34 @@
 # ClubGPT - CommandProxy
 ```
-          =*##*=              
-        -@@@@@@@@-            
-        @@@@@@@@@@            
-        %@@@@@@@@%             .g8"""bgd `7MM            *MM          .g8"bgd `7MM""Mq. MMP"MM"YMM
-   .---:.#@@@@@@%.:---.      .dP'     `M   MM             MM        .dP'   `M   MM  `MM.P'  MM  `7
- -%@@@@@@*#@@@@#*@@@@@@%=    dM'       `   MM `7MM  `7MM  MM,dMMb.  dM'     `   MM  ,M9     MM 
--@@@@@@@@@@@@@@@@@@@@@@@@=   MM            MM   MM    MM  MM    `Mb MM          MMmdM9      MM 
-=@@@@@@@@@@@@@@@@@@@@@@@@+   MM.           MM   MM    MM  MM     M8 MM.  `7MMF' MM          MM     
- *@@@@@@@@++@@*+@@@@@@@@*    `Mb.     ,'   MM   MM    MM  MM.   ,M9 `Mb.   MM   MM          MM      
-  .=***=: .@@@@. :=***=.       `"bmmmd'  .JMML. `Mbod"YML.P^YbmdP'    `"bmdPY .JMML.      .JMML.    
-          #@@@@%             
-         *@@@@@@#             
-        =#**++***=            
+          =*##*=
+        -@@@@@@@@-
+        @@@@@@@@@@
+        %@@@@@@@@%            .g8"""bgd `7MM            *MM          .g8"bgd `7MM""Mq. MMP"MM"YMM
+   .---:.#@@@@@@%.:---.     .dP'     `M   MM             MM        .dP'   `M   MM  `MM.P'  MM  `7
+ -%@@@@@@*#@@@@#*@@@@@@%=   dM'       `   MM `7MM  `7MM  MM,dMMb.  dM'     `   MM  ,M9     MM
+-@@@@@@@@@@@@@@@@@@@@@@@@=  MM            MM   MM    MM  MM    `Mb MM          MMmdM9      MM
+=@@@@@@@@@@@@@@@@@@@@@@@@+  MM.           MM   MM    MM  MM     M8 MM.  `7MMF' MM          MM
+ *@@@@@@@@++@@*+@@@@@@@@*   `Mb.     ,'   MM   MM    MM  MM.   ,M9 `Mb.   MM   MM          MM
+  .=***=: .@@@@. :=***=.      `"bmmmd'  .JMML. `Mbod"YML.P^YbmdP'    `"bmdPY .JMML.      .JMML.
+          #@@@@%
+         *@@@@@@#
+        =#**++***=
 ```
 This repository provides an OpenAPI 3.1 compatible service that allows ChatGPT and other GPT models to execute commands on any computer, supporting various shells such as PowerShell, Bash, etc. Essentially, it enables remote task execution on your computer using natural language prompts.
 
 Please note that this tool should be used with caution and at your own risk.
 
 # Members of the ClubGPT agent tool/family
-## GPT Agent group prompts
-- [♣️ ClubGPT ♣️ - DevTeam](https://github.com/matebenyovszky/ClubGPT) - It's a think tank, coding companion, a developer team in one GPT
-- [♣️ ClubGPT ♣️ - DreamTeam](https://github.com/matebenyovszky/ClubGPT) - amore general approach, where the AI selects team members and tools according to the task
+## Agent group prompts
+- [♣️ ClubGPT - DevTeam](https://github.com/matebenyovszky/ClubGPT) - It's a think tank, coding companion, a developer team in one GPT
+- [♣️ ClubGPT - DreamTeam](https://github.com/matebenyovszky/ClubGPT) - a more general approach, where the AI selects team members and tools according to the task
 
 ## Workshop and Tools for the Agents
-- ♣️ ClubGPT ♣️ - CommandProxy - (this repository) Enables the execution of commands and code on a remote computer.
-- ♣️ ClubGPT ♣️ - Sandbox - Provides a secure environment for code execution.
-- [♣️ ClubGPT ♣️ - Sandbox-ts](https://github.com/matebenyovszky/ClubGPT-Sandbox-ts) - A TypeScript version of the sandbox for code execution.
+- ♣️ ClubGPT - CommandProxy - (this repository) Enables the execution of commands and code on a remote computer.
+- ♣️ ClubGPT - Sandbox - Provides a secure environment for code execution.
+- [♣️ ClubGPT - Sandbox-ts](https://github.com/matebenyovszky/ClubGPT-Sandbox-ts) - A TypeScript version of the sandbox for code execution.
 
-## Overview
+# Overview
 
 This tool, in conjunction with ChatGPT Plus, allows you to execute any shell commands on a computer as an action.
 
@@ -112,34 +112,31 @@ You can execute a command on the server by making a POST request to the `/execut
 curl -X POST "%URL%/execute" -H "Authorization: your_secret_api_key_here" -H "Content-Type: application/json" -d '{"command":"ls"}'
 ```
 
-```powershell
-# API URL
-$url = '%URL%/system_info'
+Samples in `powershell`:
+1. Get system info:
 
-# API Key
-$headers = @{"Authorization" = "your_secret_api_key_here"}
+```powershell
+$url = '%URL%/system_info' # API URL
+$headers = @{"Authorization" = "your_secret_api_key_here"} # API Key
 
 $body = @{
     #"serverAddress" = "optional_remote_%URL%"
     #"serverAPIkey" = "optional_remote_your_secret_api_key_here"
-
 } | ConvertTo-Json
 
-# Send GET Request
+# Send Post Request
 $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body -ContentType "application/json"
 
 # Display the Response
 $response
 ```
 
+2. Execute a command:
+
 ```powershell
-# API URL
-$url = '%URL%/execute'
+$url = '%URL%/execute' # API URL
+$headers = @{"Authorization" = "your_secret_api_key_here"} # API Key
 
-# API Key
-$headers = @{"Authorization" = "your_secret_api_key_here"}
-
-# Data Payload
 $body = @{
     "command" = "echo Hello World!"
     #"serverAddress" = "optional_remote_%URL%"
@@ -153,7 +150,7 @@ $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $bo
 $response.stdout
 ```
 
-Replace `your_secret_api_key_here` with your actual API key.
+Replace `%URL%` and `your_secret_api_key_here` with your actual API key.
 
 ## Security
 

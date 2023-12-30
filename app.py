@@ -93,9 +93,29 @@ def create_app():
     @app.route('/system_info', methods=['POST'])
     def system_info():
 
+        if VERBOSE == 'ON':
+            print()
+            print(f"♣️ Request: '{request}'")
+
+        # Checking the API key
+        api_key = request.headers.get('Authorization')
+        
+        if api_key is None:
+            if VERBOSE == 'ON':
+                print('♣️ Error: No Authorization header provided')
+            return jsonify({'error': 'No Authorization header provided'}), 400
+        
+        if api_key != API_KEY:
+            if VERBOSE == 'ON':
+                # print(f'Error: Unauthorized, API key is not matching. Provided key: {api_key}, Expected key: {API_KEY}')
+                print('♣️ Error: Unauthorized, API key is not matching.')
+            return jsonify({'error': 'Unauthorized, API key is not matching'}), 401
+        
         data = request.json
         if data is None:
-            return jsonify({'error': 'No data provided'}), 400
+            if VERBOSE == 'ON':
+                print('♣️ Error: No data provided in request')
+            return jsonify({'error': 'No data provided in request'}), 400
 
         server_address = data.get('serverAddress', None)
         server_api_key = data.get('serverAPIkey', None)
