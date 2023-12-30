@@ -102,17 +102,12 @@ def create_app():
         if server_address and server_api_key:
             try:
                 # Forward the request to the specified server address
-                response = requests.post(f"{server_address}/system_info", json={}, headers={"Authorization": server_api_key}, verify=False)
+                response = requests.post(f"{server_address}/system_info", json={}, headers={"Authorization": server_api_key}, verify=True)
                 response.raise_for_status()
 
                 # Return the JSON content and status code from the response
                 return jsonify(response.json()), response.status_code
-
-                #stdout = response.content
-                return response
-                return jsonify(response.json()['content'])
-                return jsonify(response.json()), response.status_code    
-            
+           
             except requests.exceptions.RequestException as e:
                 if VERBOSE == 'ON':
                     print(f"Error: {str(e)}")
@@ -142,35 +137,37 @@ def create_app():
     def execute_command():
 
         if VERBOSE == 'ON':
-            print(request)
+            print()
+            print(f"♣️ Request: '{request}'")
 
         # Checking the API key
         api_key = request.headers.get('Authorization')
         
         if api_key is None:
             if VERBOSE == 'ON':
-                print('Error: No Authorization header provided')
+                print('♣️ Error: No Authorization header provided')
             return jsonify({'error': 'No Authorization header provided'}), 400
         
         if api_key != API_KEY:
             if VERBOSE == 'ON':
-                print(f'Error: Unauthorized, API key is not matching. Provided key: {api_key}, Expected key: {API_KEY}')
-            return jsonify({'error': 'Unauthorized, API key is not matching', 'provided_key': api_key, 'expected_key': API_KEY}), 401
+                # print(f'Error: Unauthorized, API key is not matching. Provided key: {api_key}, Expected key: {API_KEY}')
+                print('♣️ Error: Unauthorized, API key is not matching.')
+            return jsonify({'error': 'Unauthorized, API key is not matching'}), 401
         
         data = request.json
         if data is None:
             if VERBOSE == 'ON':
-                print('Error: No data provided in request')
+                print('♣️ Error: No data provided in request')
             return jsonify({'error': 'No data provided in request'}), 400
 
         command = data.get('command')
         if command is None:
             if VERBOSE == 'ON':
-                print('Error: No command provided')
+                print('♣️ Error: No command provided')
             return jsonify({'error': 'No command provided'}), 400
 
         if VERBOSE == 'ON':
-            print(f"Received command: {command}")
+            print(f"♣️ Received command: {command}")
 
         server_address = data.get('serverAddress', None)
         server_api_key = data.get('serverAPIkey', None)
@@ -187,7 +184,7 @@ def create_app():
             
             except requests.exceptions.RequestException as e:
                 if VERBOSE == 'ON':
-                    print(f"Error: {str(e)}")
+                    print(f"♣️ Error: {str(e)}")
                 return jsonify({'error': str(e)}), 500
 
         # Basic security measures in BRIDGE mode
@@ -224,6 +221,9 @@ def create_app():
 
             stdout, stderr = process.communicate()
 
+            if VERBOSE == 'ON':
+                print(f"♣️ Response: {jsonify({'stdout': stdout.decode(), 'stderr': stderr.decode() if stderr else ''}).get_json()}")
+
             # Check if stderr is not empty
             if stderr:
                 #return stderr.decode()
@@ -234,11 +234,8 @@ def create_app():
         except Exception as e:
             #return str(e)
             if VERBOSE == 'ON':
-                print(f"Error: {str(e)}")
+                print(f"♣️ Error: {str(e)}")
             return jsonify({'error': str(e)})
-
-        if VERBOSE == 'ON':
-            print(f"Response: {jsonify({'stdout': stdout.decode(), 'stderr': stderr.decode() if stderr else ''})}")
 
     return app
 

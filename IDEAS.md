@@ -10,6 +10,7 @@
 ◻️ Screenshot sharing
 ◻️ Save file to remote machine
 ◻️ Search files / in files on remote machine
+◻️ Websocket stream - chatGPT websocket
 ◻️ Create an EXE file to easily run the application for everyone (random generated key?)
 ◻️ Update website
 ◻️ Ask for user input pairing option with server?! Server just generates a new session key? If there is no code, just URL, and session mode, generate a new key?
@@ -18,6 +19,5 @@
 ◻️ Create test deployment
 ◻️ File upload-download, make folder content available through endpoint?
 ◻️ SSL cert verification off/on
-◻️ Websocket stream
 ◻️ Random time limited keys for executors (servers), not for sessions
 ◻️ Other party in an agent, tell just the task exactly

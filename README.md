@@ -14,32 +14,32 @@
          *@@@@@@#             
         =#**++***=            
 ```
-An OpenAPI 3.1 compatible service which enables ChatGPT / GPTs to run commands as an action on any computer (powershell, bash etc.). Basically you can run tasks your computer remotely with natural language prompts.
+This repository provides an OpenAPI 3.1 compatible service that allows ChatGPT and other GPT models to execute commands on any computer, supporting various shells such as PowerShell, Bash, etc. Essentially, it enables remote task execution on your computer using natural language prompts.
 
-Use at you own risk.
+Please note that this tool should be used with caution and at your own risk.
 
 # Members of the ClubGPT agent tool/family
-## GPT Agent group prompts (this repo)
+## GPT Agent group prompts
 - [♣️ ClubGPT ♣️ - DevTeam](https://github.com/matebenyovszky/ClubGPT) - It's a think tank, coding companion, a developer team in one GPT
 - [♣️ ClubGPT ♣️ - DreamTeam](https://github.com/matebenyovszky/ClubGPT) - amore general approach, where the AI selects team members and tools according to the task
 
-## Workshop and tools for the agents (other repos)
-- ♣️ ClubGPT ♣️ - CommandProxy - (this repo) run commands and code on a remote computer
-- ♣️ ClubGPT ♣️ - Sandbox - run code in a sandbox
-- [♣️ ClubGPT ♣️ - Sandbox-ts](https://github.com/matebenyovszky/ClubGPT-Sandbox-ts) - run code in a sandbox (in Typescript, I possibly will continue to work on the Python version)
+## Workshop and Tools for the Agents
+- ♣️ ClubGPT ♣️ - CommandProxy - (this repository) Enables the execution of commands and code on a remote computer.
+- ♣️ ClubGPT ♣️ - Sandbox - Provides a secure environment for code execution.
+- [♣️ ClubGPT ♣️ - Sandbox-ts](https://github.com/matebenyovszky/ClubGPT-Sandbox-ts) - A TypeScript version of the sandbox for code execution.
 
-## Introduction
+## Overview
 
-Using this tool and having ChatGPT Plus you can run any shell commands on your computer as an action.
+This tool, in conjunction with ChatGPT Plus, allows you to execute any shell commands on a computer as an action.
 
-There are of course other approaches using local language models or LLM APIs, running them locally (like [Open Interpreter](https://github.com/KillianLucas/open-interpreter) or [PowerShellAI](https://github.com/dfinke/PowerShellAI)) or on a remote sandbox (like [ClubGPT-Sandbox](https://github.com/matebenyovszky/ClubGPT-Sandbox)), which are all also cool, but I wanted to try how far can I go with this approach.
+While there are other methods that utilize local language models or LLM APIs, running them locally (such as [Open Interpreter](https://github.com/KillianLucas/open-interpreter) or [PowerShellAI](https://github.com/dfinke/PowerShellAI)) or in a remote sandbox (like [ClubGPT-Sandbox](https://github.com/matebenyovszky/ClubGPT-Sandbox)), this tool offers a unique approach to remote command execution.
 
-## Fetures and highlights
+## Features and Highlights
 
-- This is a Flask API that allows executing commands on a machine (PowerShell/CMD/Shell/Bash/Python etc.).
-- It uses an API key for authorization (fixed or generated for every session - so you don't expose your machine to ChatGPT on a long term)
-- Separate endpoint to get basic data about the system (/system_info)
-- Bridge mode to forward request to another worker. Bridge mode was required because I cannot make it work directly with ChatGPT, so I made az Azure Web App to forward commands.
+- Provides a Flask API for executing commands on a machine (PowerShell/CMD/Shell/Bash/Python etc.).
+- Utilizes an API key for authorization, which can be either fixed or generated for each session, ensuring your machine is not exposed to ChatGPT long-term.
+- Includes a separate endpoint to retrieve basic system information (/system_info).
+- Offers a Bridge mode to forward requests to another worker. This mode was developed to facilitate direct interaction with ChatGPT, using an Azure Web App to forward commands.
 
 ## Samples and ideas
 
@@ -63,24 +63,26 @@ There are of course other approaches using local language models or LLM APIs, ru
   - Set automated reminders or alerts for special events.
   - Install, update or uninstall various applications via command line.
 
-Some sample pictures
-
-[View Sample Images Here](images/)
+[View some sample screenshots of usage in ChatGPT here](images/)
 
 ## Setup
 
 1. Install the required Python packages:
-pip install -r requirements.txt
+```pip install -r requirements.txt```
 
 2. Configuration
 
 - CP_MODE options:
- - SERVER: a worker (executor) that can run commands, could also act as a bridge
- - BRIDGE: cannot execute commands in the environment, just forward them. This is the default.
+  - SERVER: A worker (executor) that can run commands, could also act as a bridge.
+  - BRIDGE: Cannot execute commands in the environment, just forward them. This is the default.
 
-- KEY_MODE options
- - ENV_KEY: API key defined in the .env file.
- - SESSION_KEY: Random key every time you. This is the default.
+- KEY_MODE options:
+  - ENV_KEY: API key defined in the .env file.
+  - SESSION_KEY: Random key generated every time you start a session. This is the default.
+
+- VERBOSE options:
+  - ON: Detailed logs will be made locally. This is the default.
+  - OFF: No detailed logs will be made.
 
 3. Run the application:
 python app.py
@@ -128,7 +130,6 @@ $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $bo
 
 # Display the Response
 $response
-#$response.stdout # If JSON
 ```
 
 ```powershell
@@ -143,17 +144,13 @@ $body = @{
     "command" = "echo Hello World!"
     #"serverAddress" = "optional_remote_%URL%"
     #"serverAPIkey" = "optional_remote_your_secret_api_key_here"
-
 } | ConvertTo-Json
-
-# [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
 
 # Send POST Request
 $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body -ContentType "application/json"
 
 # Display the Response
-$response
-#$response.stdout # If JSON
+$response.stdout
 ```
 
 Replace `your_secret_api_key_here` with your actual API key.
