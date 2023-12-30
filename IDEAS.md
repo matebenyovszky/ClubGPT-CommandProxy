@@ -3,6 +3,7 @@
 ✅ Print out key and ipaddress locally
 ✅ Check machine type, so know what kind of commands could be run
 ✅ Use key-vault feature in GitHub
+◻️ Stream to file
 ◻️ General GPT, hide innecessary information
 ◻️ Encoding - decoding for special characters? (see "Hello World!" folder creation - URL encode?/hash)
 ◻️ Open file from remote machine
@@ -10,6 +11,7 @@
 ◻️ Screenshot sharing
 ◻️ Save file to remote machine
 ◻️ Search files / in files on remote machine
+◻️ Ability to run as admin on the server
 ◻️ Websocket stream - chatGPT websocket
 ◻️ Create an EXE file to easily run the application for everyone (random generated key?)
 ◻️ Update website

@@ -221,6 +221,13 @@ def create_app():
             # Check the operating system
             interpreter, _ = data.get('interpreter', get_command_interpreter())
             if interpreter == 'powershell':
+                # Make the command a raw string
+                command = r'{}'.format(command)
+                # Append 2>&1 to the command to redirect PowerShell errors to stderr
+                #command += ' | ConvertTo-Json 2>&1'
+                #command += ' | Out-String'
+                if VERBOSE == 'ON':
+                    print(f"♣️ Running in Powershell: {command}")
                 # On Windows, call PowerShell and pass the command as an argument
                 process = subprocess.Popen(["powershell", "-Command"] + shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             elif interpreter == 'cmd':

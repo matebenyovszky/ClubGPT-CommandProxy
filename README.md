@@ -43,26 +43,6 @@ While there are other methods that utilize local language models or LLM APIs, ru
 
 ## Samples and ideas
 
-- File and Folder Management:
-  - Create a folder in one location, then move files to it from another location.
-  - Find and copy or delete multiple files from the machine based on various filter criteria (e.g. extension, creation date).
-- Collect system information:
-  - Query system hardware and software configuration, such as processor, memory, operating system version.
-- Automated Administrator Tasks:
-  - Analyze system log files, look for error messages or specific events.
-  - Configure or update remote desktop settings.
-- Perform network operations:
-  - Display the IP address and network configuration of the machine.
-  - Run network diagnostic commands such as ping or traceroute.
-- Scripts and Automated Tasks:
-  - Write and run simple Python or PowerShell scripts, for example for data processing or system administration.
-- Security Audits:
-  - Checking and installing security updates.
-  - Run virus scans or check firewall settings.
-- Custom Tasks:
-  - Set automated reminders or alerts for special events.
-  - Install, update or uninstall various applications via command line.
-
 [View some sample screenshots of usage in ChatGPT here](images/)
 
 ## Setup
