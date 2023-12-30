@@ -39,7 +39,7 @@ def check_python():
         return "python", version
     except Exception as e:
         if VERBOSE == 'ON':
-            print(f"Error: {str(e)}")
+            print(f"♣️ Error: {str(e)}")
         return None, None
 
 # Function to create the Flask app
@@ -50,27 +50,27 @@ def create_app():
     # VERBOSE options (see .env.example)
     VERBOSE = os.environ.get('VERBOSE', 'ON')  # Set your VERBOSE in the environment
     if VERBOSE == 'ON':
-        print("VERBOSE: ON")
+        print("♣️ VERBOSE: ON")
     else:
-        print("VERBOSE: OFF")
+        print("♣️ VERBOSE: OFF")
 
     # CP_MODE options (see .env.example)
     CP_MODE = os.environ.get('CP_MODE', 'BRIDGE')  # Set your CP_MODE in the environment
-    print(f"CP_MODE: {CP_MODE}")
+    print(f"♣️ CP_MODE: {CP_MODE}")
 
     # KEY_MODE options (see .env.example)
     KEY_MODE = os.environ.get('KEY_MODE', 'SESSION_KEY')  # Set your KEY_MODE in the environment
-    print(f"KEY_MODE: {KEY_MODE}")
+    print(f"♣️ KEY_MODE: {KEY_MODE}")
    
     # API key for security
     # If KEY_MODE is SESSION_KEY or no API_KEY is available, generate a random 16-character string using secrets
     if KEY_MODE == 'SESSION_KEY' or not os.environ.get('API_KEY'):
         import secrets
         API_KEY = secrets.token_hex(16)
-        print(f"API_KEY: {API_KEY}")
+        print(f"♣️ API_KEY: {API_KEY}")
     else:
         API_KEY = os.environ.get('API_KEY')
-        print(f"API_KEY: {API_KEY}")
+        print(f"♣️ API_KEY: {API_KEY}")
 
     @app.route('/apispec.json')
     def spec():
@@ -110,7 +110,7 @@ def create_app():
            
             except requests.exceptions.RequestException as e:
                 if VERBOSE == 'ON':
-                    print(f"Error: {str(e)}")
+                    print(f"♣️ Error: {str(e)}")
                 return jsonify({'error': str(e)}), 500
         
         interpreter, interpreter_version = get_command_interpreter()
